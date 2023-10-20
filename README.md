@@ -1,1 +1,1 @@
-# minecraft_generative_art
+# minecraft-generative-art
