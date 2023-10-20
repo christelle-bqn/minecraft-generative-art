@@ -19,10 +19,16 @@ export default class World {
   }
 
   setScene() {
+    // Camera Positionning
+    /*  this.experience.camera.instance.position.set(0, 0, 3);
+    this.experience.camera.instance.rotation.set(0, 0, 0); */
+
+    // Map instanciation
     this.mapMaterial = new MapMaterial({
       fragmentShader,
       vertexShader,
     });
+
     const map = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mapMaterial);
 
     this.scene.add(map);

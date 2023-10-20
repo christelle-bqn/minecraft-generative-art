@@ -13,7 +13,5 @@ export default class MapMaterial extends ShaderMaterial {
     console.log(shader);
   }
 
-  update(time) {
-    console.log(time);
-  }
+  update(time) {}
 }
