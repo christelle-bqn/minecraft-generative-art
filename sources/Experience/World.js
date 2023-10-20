@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import Experience from "./Experience.js";
-import MapMaterial from "../Materials/MapMaterial";
+import MapMaterial from "./Materials/MapMaterial";
 import fragmentShader from "./Shaders/2d.frag";
 import vertexShader from "./Shaders/2d.vert";
 
@@ -19,10 +19,6 @@ export default class World {
   }
 
   setScene() {
-    // Camera Positionning
-    /*  this.experience.camera.instance.position.set(0, 0, 3);
-    this.experience.camera.instance.rotation.set(0, 0, 0); */
-
     // Map instanciation
     this.mapMaterial = new MapMaterial({
       fragmentShader,
