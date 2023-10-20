@@ -1,13 +1,9 @@
-uniform sampler2D uImage;
-uniform float uTime;
-uniform vec2 uSize;
 varying vec2 vUv;
+varying vec3 vPosition;
 
 #define PI 3.14159
 
 void main(){
-    vec2 uv=vUv;
-    vec4 col=texture2D(uImage,uv);
-    
-    gl_FragColor=col;
+    vec3 position=vPosition;
+    gl_FragColor=vec4(0.,1.,0.,1.);
 }
