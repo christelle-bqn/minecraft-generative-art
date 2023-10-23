@@ -37,7 +37,7 @@ void main() {
     }
 
     vec3 color;
-    color = mix(dirt, water, when_lt(elevation, 0.01));
+    color = mix(water, dirt, when_lt(elevation, 0.01));
     color = mix(color, grass, when_gt(elevation, 0.01) * when_lt(elevation, 0.3));
     color = mix(color, stone, when_gt(elevation, 0.6));
     color = mix(color, snow, when_gt(elevation, 0.9));
