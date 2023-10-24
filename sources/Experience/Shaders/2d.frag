@@ -1,6 +1,13 @@
 precision mediump float;
 varying vec2 vUv;
 uniform float seed;
+uniform sampler2D textureAutumn;
+uniform sampler2D textureWinter;
+uniform sampler2D textureSpring;
+uniform sampler2D textureSummer;
+uniform sampler2D textureSeason;
+/* varying vec2 vTexCoordAutumn;
+varying vec2 vTexCoordSpring; */
 uniform vec2 cameraPos;
 uniform float zoomLevel;
 uniform float time;
@@ -9,12 +16,25 @@ uniform float time;
 #define gridSize 128.0
 
 // Blocs colors
-#define dirt vec3(0.6, 0.4, 0.2)
-#define grass vec3(0.25, 0.5, 0.1)
-#define stone vec3(0.5, 0.5, 0.5)
-#define snow vec3(1.0, 1.0, 1.0)
-#define water vec3(0.0, 0.0, 1.0)
-#define sand vec3(1.0, 1.0, 0.0)
+#define grass0 vec2(0.0, 3.0)
+#define grass1 vec2(1.0, 3.0)
+#define grass2 vec2(2.0, 3.0)
+#define grass3 vec2(3.0, 3.0)
+
+#define water0 vec2(0.0, 1.0)
+#define water1 vec2(1.0, 1.0)
+#define water2 vec2(2.0, 1.0)
+#define water3 vec2(3.0, 1.0)
+
+#define sand0 vec2(0.0, 2.0)
+#define sand1 vec2(1.0, 2.0)
+#define sand2 vec2(2.0, 2.0)
+#define sand3 vec2(3.0, 2.0)
+
+#define stone0 vec2(0.0, 0.0)
+#define stone1 vec2(1.0, 0.0)
+#define stone2 vec2(2.0, 0.0)
+#define stone3 vec2(3.0, 0.0)
 
 float when_gt(float x, float y) {
     return max(sign(x - y), 0.0);
@@ -29,10 +49,8 @@ float when_eq(float x, float y) {
 }
 
 void main() {
-//    vec2 pixelatedUv = floor(vUv * gridSize) / gridSize;
     vec2 offsetUv = vUv + cameraPos;
     vec2 pixelatedUv = floor(offsetUv * gridSize) / gridSize;
-//    vec2 pixelatedUv = floor(offsetUv * gridSize * zoomFactor) / (gridSize * zoomFactor);
 
     // Elevations
     float elevation = 0.0;
@@ -44,7 +62,6 @@ void main() {
 
     // Initial values
     float amplitude = 0.8;
-//    float amplitude = zoomFactor;
     float frequency = .3;
 
     vec2 pixelatedCenteredUv = pixelatedUv - vec2(0.5, 0.5);
@@ -55,7 +72,6 @@ void main() {
     // Loop of octaves
     for (int i = 0; i < octaves2; i++) {
         elevation += amplitude * snoise(frequency * pixelatedCenteredUv + seed);
-//        elevation += amplitude * snoise(frequency * pixelatedUv + seed);
         frequency *= lacunarity;
         amplitude *= gain;
     }
@@ -65,30 +81,62 @@ void main() {
     elevation = (elevation + 1.0) * 0.5;
 
     // Generate temperature and humidity
-    float temperature = floor(snoise(.5 * pixelatedCenteredUv * .8 + seed) * 5.0) / 5.0;
+    float temperature = floor(snoise(.05 * pixelatedCenteredUv * .8 + seed) * 5.0) / 5.0;
     temperature = (temperature + 1.0) * 0.5;
-    float humidity = floor(snoise((pixelatedCenteredUv + .4) * .8 + seed) * 5.0) / 5.0;
+    float humidity = floor(snoise((.05 * pixelatedCenteredUv + .4) * .8 + seed) * 5.0) / 5.0;
     humidity = (humidity + 1.0) * 0.5;
 
-    vec3 color;
+    vec2 colorPosition;
+    float colorCount = 4.0;
 
 
     // Test when elevation is 0
-//    color = vec3(elevation, elevation, elevation);
-//    color = vec3(snoise(frequency* pixelatedUv + seed), snoise(frequency * pixelatedUv + seed), snoise(frequency * pixelatedUv + seed));
-//    color = vec3(temperature, temperature, temperature);
-    color = vec3(humidity, humidity, humidity);
-//
+    vec4 color;
 
-//    if (temperature < 0.3 && humidity > 0.8 || elevation < 0.3) {
-//        color = vec3(0.0, 0.0, 1.0);
-//    }
-    if (humidity == 0.4) {
-        color = vec3(0.0, 0.0, 1.0);
+    // Water
+    colorPosition = mix(grass0, water0, when_gt(humidity, 0.8) * when_lt(temperature, 0.2 ));
+    colorPosition = mix(colorPosition, water1, when_lt(elevation, 0.3));
+    colorPosition = mix(colorPosition, water2, when_lt(elevation, 0.5));
+    colorPosition = mix(colorPosition, water3, when_lt(elevation, 0.7));
+
+    if (elevation > 0.8) {
+        colorPosition = stone0;
     }
+
+
+    //
+
+//        color = vec4(elevation, elevation, elevation, 1.0);
+    //    color = vec3(snoise(frequency* pixelatedUv + seed), snoise(frequency * pixelatedUv + seed), snoise(frequency * pixelatedUv + seed));
+//        color = vec4(temperature, temperature, temperature, 1.0);
+    //
+
+    //    if (temperature < 0.3 && humidity > 0.8 || elevation < 0.3) {
+    //        color = vec3(0.0, 0.0, 1.0);
+    //    }
+    //    if (humidity == 0.8 && temperature > 0.4 && temperature < 0.6) {
+    //        color = vec3(0.0, 0.0, 1.0);
+    //    }
+
 //    color = mix(color, vec3(0.0, 0.0, 1.0), when_gt(humidity, .8));
 //    color = mix(color, vec3(1.0, 1.0, 0.0), when_lt(elevation, 0.000000000001));
 
-    gl_FragColor = vec4(color, 1.0);
+    vec2 coord = floor(vUv / colorCount) + (colorPosition / colorCount);
+    color = texture2D(textureSeason, coord);
+
+
+    if (elevation > 0.6 && humidity < 0.3 && temperature > 0.5) {
+        color = vec4(1.0, 0.0, 1.0, 1.0);
+    }
+
+    if (temperature > 0.8 && humidity < 0.3 && elevation < 0.7) {
+        color = vec4(1.0, 1.0, 0.0, 1.0);
+
+    }
+
+//    color = vec4(humidity, humidity, humidity, 1.0);
+//    color = vec4(temperature, temperature, temperature, 1.0);
+
+    gl_FragColor = color;
 }
 

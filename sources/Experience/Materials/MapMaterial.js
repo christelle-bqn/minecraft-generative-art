@@ -16,7 +16,8 @@ export default class MapMaterial extends ShaderMaterial {
     const snoise2 = glsl`#pragma glslify: snoise2 = require(glsl-noise/simplex/2d)`;
 
     // Ask the user to provide a seed
-    const seed = window.prompt("Please enter a seed par pitié (text or number)", this.generateRandomSeed().toString());
+    // const seed = window.prompt("Please enter a seed par pitié (text or number)", this.generateRandomSeed().toString());
+    const seed = this.generateRandomSeed();
 
     console.log("Using seed: " + seed)
 
