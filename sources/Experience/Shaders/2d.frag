@@ -93,8 +93,6 @@ void main() {
     vec2 colorPosition;
     float colorCount = 4.0;
 
-
-    // Test when elevation is 0
     vec4 color;
 
     // Water
@@ -107,10 +105,18 @@ void main() {
     colorPosition = mix(colorPosition, grass3, elevation);
 
     // Stone
-    colorPosition = mix(colorPosition, stone0, elevation * when_gt(elevation, 0.8));
-    colorPosition = mix(colorPosition, stone1, elevation * when_gt(elevation, 0.85));
-    colorPosition = mix(colorPosition, stone2, elevation * when_gt(elevation, 0.9));
-    colorPosition = mix(colorPosition, stone3, elevation * when_gt(elevation, 0.95));
+    colorPosition = mix(colorPosition, stone0, elevation * when_gt(elevation, 0.8) );
+    colorPosition = mix(colorPosition, stone1, elevation * when_gt(elevation, 0.85) );
+    colorPosition = mix(colorPosition, stone2, elevation * when_gt(elevation, 0.9) );
+    colorPosition = mix(colorPosition, stone3, elevation * when_gt(elevation, 0.95) );
+
+    /* BIOMES */
+    // Desert
+    colorPosition = mix(colorPosition, sand1, when_gt(temperature, 0.8) * when_gt(humidity, 0.2) * when_lt(elevation, 0.8));
+    colorPosition = mix(colorPosition, sand2, elevation * when_gt(temperature, 0.8) * when_gt(humidity, 0.2) * when_lt(elevation, 0.8));
+    colorPosition = mix(colorPosition, sand3, elevation * when_gt(temperature, 0.8) * when_gt(humidity, 0.2) * when_lt(elevation, 0.8));
+
+
 
 //        color = vec4(elevation, elevation, elevation, 1.0);
     //    color = vec3(snoise(frequency* pixelatedUv + seed), snoise(frequency * pixelatedUv + seed), snoise(frequency * pixelatedUv + seed));

@@ -79,6 +79,8 @@ export default class World {
     const textureSpringImg = this.resources.items.textureSpring;
     const textureSummerImg = this.resources.items.textureSummer;
 
+    textureSpringImg.anisotropy = 16
+
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
