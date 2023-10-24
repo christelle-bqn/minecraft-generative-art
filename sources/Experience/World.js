@@ -86,17 +86,18 @@ export default class World {
       // Normalize mouse position to -1 to +1 range
       mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-  
+
+
       // Update the picking ray with the camera and mouse position
-      raycaster.setFromCamera(mouse, this.camera);
-  
+      raycaster.setFromCamera(mouse, this.camera.instance);
+
       // Find intersected objects
       const intersects = raycaster.intersectObjects(this.scene.children);
-  
+
       if (intersects.length > 0) {
           const firstIntersected = intersects[0].object;
           console.log("Clicked on:", firstIntersected);
-  
+
         switch(firstIntersected.name) {
           case 'springButton':
             this.mapMaterial.uniforms.textureSeason.value = textureSpringImg;
