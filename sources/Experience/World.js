@@ -1,8 +1,11 @@
 import * as THREE from "three";
 import Experience from "./Experience.js";
 import MapMaterial from "./Materials/MapMaterial";
+import SkyMaterial from "./Materials/SkyMaterial.js";
 import fragmentShader from "./Shaders/2d.frag";
 import vertexShader from "./Shaders/2d.vert";
+import skyFragmentShader from './Shaders/sky.frag';
+import skyVertexShader from './Shaders/sky.vert';
 
 export default class World {
   constructor(_options) {
@@ -11,16 +14,23 @@ export default class World {
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
     this.camera = this.experience.camera;
+    this.mixer = new THREE.AnimationMixer();
 
     this.resources.on("groupEnd", (_group) => {
       if (_group.name === "base") {
         this.setScene();
         this.clickEvent();
+        this.setBirdModel();
       }
     });
   }
 
   setScene() {
+    const spotLight = new THREE.SpotLight(0xffffff, 5);
+    spotLight.position.set(0, 0, 2.5);
+    this.scene.add(spotLight);
+    spotLight.castShadow = true;
+
     const textureAutumnImg = this.resources.items.textureAutumn;
     const textureWinterImg = this.resources.items.textureWinter;
     const textureSpringImg = this.resources.items.textureSpring;
@@ -49,7 +59,21 @@ export default class World {
       }
     });
 
+    this.skyMaterial = new SkyMaterial({
+      transparent: true,
+      opacity: 0.2,
+      fragmentShader: skyFragmentShader,
+      vertexShader: skyVertexShader,
+      uniforms: {
+        u_resolution: {
+          value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+        },
+      }
+    });
+
     const map = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mapMaterial);
+
+    const sky = new THREE.Mesh(new THREE.PlaneGeometry(0.67, 0.669), this.skyMaterial);
 
     this.buttonMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 
@@ -65,12 +89,14 @@ export default class World {
 
     map.position.set(0, -0.02);
 
+    sky.position.set(0, -0.014, 1.0);
+
     springButton.position.set(-0.45, 0.55);
     summerButton.position.set(-0.35, 0.55);
     autumnButton.position.set(-0.25, 0.55);
     winterButton.position.set(-0.15, 0.55);
 
-    this.scene.add(map, springButton, summerButton, autumnButton, winterButton);
+    this.scene.add(sky, map, springButton, summerButton, autumnButton, winterButton);
   }
 
   clickEvent() {
@@ -95,8 +121,7 @@ export default class World {
       const intersects = raycaster.intersectObjects(this.scene.children);
 
       if (intersects.length > 0) {
-          const firstIntersected = intersects[0].object;
-          console.log("Clicked on:", firstIntersected);
+        const firstIntersected = intersects[0].object;
 
         switch(firstIntersected.name) {
           case 'springButton':
@@ -119,11 +144,40 @@ export default class World {
     });
   }
 
+  setBirdModel() {
+    const bird = this.resources.items.bird;
+    const mesh = bird.scene;
+
+    this.mixer = new THREE.AnimationMixer(mesh);
+
+    for (let i = 0; i < bird.animations.length; i++) {
+      const animation = bird.animations[i];
+
+      const action = this.mixer.clipAction(animation);
+      action.play();
+    }
+
+    mesh.position.set(0, 0, 0.5);
+    mesh.scale.set(0.12, 0.12, 0.12);
+    mesh.rotation.x = Math.PI * 0.5;
+    mesh.rotation.y = Math.PI * 0.25;
+
+    this.scene.add(mesh);
+  }
+
   resize() {}
 
   update() {
     if (this.mapMaterial) {
       this.mapMaterial.update(this.experience.time.elapsed);
+    }
+
+    if (this.skyMaterial) {
+      this.skyMaterial.update(this.experience.time.elapsed);
+    }
+
+    if (this.setBirdModel) {
+      this.mixer.update(this.experience.time.delta * 0.0005);
     }
   }
 
