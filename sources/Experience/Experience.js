@@ -66,7 +66,7 @@ export default class Experience
                 this.seed = this.seedInput.value;
                 this.isExperienceStarted = true;
                 this.time.elapsed = 0;
-                this.scene.add(this.world.map);
+                this.scene.add(this.world.map, this.world.sky);
                 console.log(this.seed + " is the seed");
             }
         });

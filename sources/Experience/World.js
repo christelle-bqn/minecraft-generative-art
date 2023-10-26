@@ -20,7 +20,7 @@ export default class World {
       if (_group.name === "base") {
         this.setScene();
         this.clickEvent();
-        this.setBirdModel();
+        // this.setBirdModel();
       }
     });
   }
@@ -42,7 +42,6 @@ export default class World {
     const textureSummerImg = this.resources.items.textureSummer;
     textureSummerImg.anisotropy = 16;
     textureSummerImg.magFilter = THREE.NearestFilter;
-    console.log('set scene');
 
     // Map instanciation
     this.mapMaterial = new MapMaterial({
@@ -76,12 +75,15 @@ export default class World {
         u_resolution: {
           value: new THREE.Vector2(window.innerWidth, window.innerHeight),
         },
+        zoomLevel: {
+            value: 5.0,
+        }
       }
     });
 
-    this.map = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mapMaterial);
+    this.map = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.mapMaterial);
 
-    const sky = new THREE.Mesh(new THREE.PlaneGeometry(0.67, 0.669), this.skyMaterial);
+    this.sky = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.skyMaterial);
 
     this.buttonMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 
@@ -97,12 +99,23 @@ export default class World {
 
     this.map.position.set(0, -0.02);
 
-    sky.position.set(0, -0.014, 1.0);
+    this.sky.position.set(0, -0.014, 1.0);
 
     springButton.position.set(-0.45, 0.55);
     summerButton.position.set(-0.35, 0.55);
     autumnButton.position.set(-0.25, 0.55);
     winterButton.position.set(-0.15, 0.55);
+
+    // this.text = this.resources.items.text.scene;
+    // this.text.position.set(0, 0, 0)
+    // this.text.scale.set(0.1, 0.1, 0.1);
+    // this.text.traverse((child) => {
+    //   if (child instanceof THREE.Mesh) {
+    //     child.material = new THREE.MeshBasicMaterial({color: 0xffffff});
+    //   }
+    // })
+    // console.log(this.text);
+    // this.scene.add(this.text);
 
     // this.scene.add(map, springButton, summerButton, autumnButton, winterButton);
   }
@@ -186,6 +199,10 @@ export default class World {
 
     if (this.setBirdModel) {
       this.mixer.update(this.experience.time.delta * 0.0005);
+    }
+
+    if (this.text) {
+      this.text.rotation.y += 0.01;
     }
   }
 

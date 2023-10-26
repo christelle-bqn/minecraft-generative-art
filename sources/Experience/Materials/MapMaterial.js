@@ -14,9 +14,6 @@ export default class MapMaterial extends ShaderMaterial {
   onBeforeCompile(shader, renderer) {
     super.onBeforeCompile(shader, renderer);
 
-    console.log("MapMaterial.onBeforeCompile()", shader, renderer);
-
-
     const snoise2 = glsl`#pragma glslify: snoise2 = require(glsl-noise/simplex/2d)`;
 
     const seed = this.experience.seed;
@@ -40,8 +37,8 @@ export default class MapMaterial extends ShaderMaterial {
     window.addEventListener("mousemove", (event) => {
       if (isDragging) {
         window.document.body.style.cursor = "grabbing";
-        let dx = -((event.clientX - startDragPosition.x) / window.innerWidth) * 1.4;
-        let dy = ((event.clientY - startDragPosition.y) / window.innerHeight) * 1.4;
+        let dx = -((event.clientX - startDragPosition.x) / window.innerWidth) * 0.5;
+        let dy = ((event.clientY - startDragPosition.y) / window.innerHeight) * 0.5;
 
         cameraPosition.x = lastCameraPosition.x + dx;
         cameraPosition.y = lastCameraPosition.y + dy;
@@ -59,7 +56,7 @@ export default class MapMaterial extends ShaderMaterial {
       window.document.body.style.cursor = "default";
     });
 
-    this.zoomLevel = 5.0;
+    this.zoomLevel = 600.0;
     window.addEventListener("wheel", (event) => {
       const zoomFactor = 0.1;
       const previousZoomLevel = this.zoomLevel;
@@ -85,6 +82,7 @@ export default class MapMaterial extends ShaderMaterial {
       cameraPosition.set(focalPoint.x, focalPoint.y);
     });
 
+    shader.uniforms.aspectRatio = {value: window.innerWidth / window.innerHeight};
     shader.uniforms.isStarted = {value: false};
     shader.uniforms.cameraPos = {value: cameraPosition};
     shader.uniforms.mousePos = {value: mousePosition};
@@ -131,11 +129,11 @@ export default class MapMaterial extends ShaderMaterial {
       this.uniforms.time = { value: time * 0.001 }
     }
 
-    if (this.experience.isExperienceStarted && this.zoomLevel < 800) {
+    /*if (this.experience.isExperienceStarted && this.zoomLevel < 800) {
       const targetZoomLevel = 800;
       const zoomLevel = this.lerp(this.zoomLevel, targetZoomLevel, 0.01);
       // Floor the zoom level to 2 decimal places
       this.zoomLevel = Math.floor(zoomLevel * 100) / 100;
-    }
+    }*/
   }
 }

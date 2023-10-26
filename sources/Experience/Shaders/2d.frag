@@ -13,7 +13,7 @@ uniform vec2 mousePos;
 uniform bool isStarted;
 
 #define PI 3.14159
-#define gridSize 2048.0
+#define gridSize pow(2.0, 13.0)
 
 // Blocs colors
 #define grass0 vec2(0.5, 8.5)
@@ -88,6 +88,27 @@ float when_eq(float x, float y) {
     return 1.0 - abs(sign(x - y));
 }
 
+/*float smoothstep_new(float edge0, float edge1, float x) {
+    float t = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+    return t * t * (3.0 - 2.0 * t);
+}
+
+float when_gt(float x, float y) {
+    const float epsilon = 0.01;
+    return smoothstep_new(y, y + epsilon, x);
+}
+
+float when_lt(float x, float y) {
+    const float epsilon = 0.01;
+    return 1.0 - smoothstep_new(y - epsilon, y, x);
+}
+
+float when_eq(float x, float y) {
+    const float epsilon = 0.01;
+    return (1.0 - smoothstep_new(y - epsilon, y, x)) * smoothstep_new(y, y + epsilon, x);
+}*/
+
+
 float and(float a, float b) {
     return a * b;
 }
@@ -103,6 +124,9 @@ void main() {
 
     // Elevations
     float elevation = 0.0;
+
+    float seasonProgress = mod(time * .06, 1.0);
+    float seasonIndex = mod(time * .06, 4.0);
 
     // Properties
     const int octaves2 = 6;
@@ -137,9 +161,16 @@ void main() {
 
     // Generate temperature and humidity
     float temperature = floor(snoise(0.05 * pixelatedCenteredUv * .08 + seed) * 10.) / 10.;
+//    float temperature = snoise(0.05 * pixelatedCenteredUv * .08 + seed);
     temperature = (temperature + 1.0) * 0.5;
     float humidity = floor(snoise(0.05 * pixelatedCenteredUv * .09 + seed) * 10.) / 10.;
+//    float humidity = snoise(0.05 * pixelatedCenteredUv * .09 + seed);
     humidity = (humidity + 1.0) * 0.5;
+
+    // After elevation is animated, we can start animate temperature and humidity
+//    temperature += mix(-0.2, 0.0, clamp(time * .1, 0.0, 1.0));
+//    humidity += mix(-0.2, 0.0, clamp(time * .1, 0.0, 1.0));
+
 
     // Peaks and valleys noise
     float peaks = floor(snoise(.8 * pixelatedCenteredUv * .04 + seed) * 10.) / 10.;
@@ -205,20 +236,13 @@ void main() {
     colorPosition = mix(colorPosition, volcano3, elevation * isVolcano);
 
     // Snow Mountains
-    colorPosition = mix(colorPosition, snow0, isSnow);
-    colorPosition = mix(colorPosition, snow1, elevation * isSnow);
-    colorPosition = mix(colorPosition, snow2, elevation * isSnow);
+    colorPosition = mix(colorPosition, snow3, isSnow);
     colorPosition = mix(colorPosition, snow3, elevation * isSnow);
+    colorPosition = mix(colorPosition, snow2, elevation * isSnow);
+    colorPosition = mix(colorPosition, snow1, elevation * isSnow);
+    colorPosition = mix(colorPosition, snow0, elevation * isSnow);
 
     // Ocean
-    // First, create the remapped elevation for the ocean
-    float elevationOcean = elevation / 0.2;
-
-    // Ensure the remapped value stays within [0, 1]
-    elevationOcean = clamp(elevationOcean, 0.0, 1.0);
-
-    // Now, use elevationOcean for your color blending
-
     colorPosition = mix(colorPosition, water3, isOcean);
     colorPosition = mix(colorPosition, water3, elevation * isOcean);
     colorPosition = mix(colorPosition, water2, elevation * isOcean);
@@ -244,9 +268,6 @@ void main() {
     vec4 spring = texture2D(textureSpring, coord);
     vec4 summer = texture2D(textureSummer, coord);
 
-    float seasonProgress = mod(time * .06, 1.0);
-    float seasonIndex = mod(time * .06, 4.0);
-
     float isAutumnToWinter = and(step(0.0, seasonIndex), step(seasonIndex, 1.0));
     float isWinterToSpring = and(step(1.0, seasonIndex), step(seasonIndex, 2.0));
     float isSpringToSummer = and(step(2.0, seasonIndex), step(seasonIndex, 3.0));
@@ -264,7 +285,7 @@ void main() {
 
 //    color = texture2D(textureSeason, coord );
 
-//    color = vec4(vec3(season), 1.0);
+//    color = vec4(vec3(seasonProgress), 1.0);
 
 //    float combined = pow(temperature * humidity, 3.0);
 
