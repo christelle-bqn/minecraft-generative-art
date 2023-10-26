@@ -21,10 +21,22 @@ export default class World {
   }
 
   setScene() {
+
     const textureAutumnImg = this.resources.items.textureAutumn;
+    textureAutumnImg.anisotropy = 16;
+    textureAutumnImg.magFilter = THREE.NearestFilter;
+
     const textureWinterImg = this.resources.items.textureWinter;
+    textureWinterImg.anisotropy = 16;
+    textureWinterImg.magFilter = THREE.NearestFilter;
+
     const textureSpringImg = this.resources.items.textureSpring;
+    textureSpringImg.anisotropy = 16;
+    textureSpringImg.magFilter = THREE.NearestFilter;
+
     const textureSummerImg = this.resources.items.textureSummer;
+    textureSummerImg.anisotropy = 16;
+    textureSummerImg.magFilter = THREE.NearestFilter;
 
     // Map instanciation
     this.mapMaterial = new MapMaterial({
@@ -45,7 +57,7 @@ export default class World {
         },
         textureSeason: {
           value: textureSpringImg,
-        }
+        },
       }
     });
 
@@ -78,8 +90,6 @@ export default class World {
     const textureWinterImg = this.resources.items.textureWinter;
     const textureSpringImg = this.resources.items.textureSpring;
     const textureSummerImg = this.resources.items.textureSummer;
-
-    textureSpringImg.anisotropy = 16
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
