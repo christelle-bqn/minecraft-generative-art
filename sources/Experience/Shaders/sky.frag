@@ -70,6 +70,6 @@ void main() {
                 clamp((f*f) * 0.0,0.0,0.0));
 
     color += fbm(pixelatedCenteredUv + .01 * u_time);
-    
+
     gl_FragColor = vec4(color) * when_gt(zoomLevel, 50.0);
 }

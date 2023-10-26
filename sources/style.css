@@ -9,6 +9,7 @@ html,
 body
 {
     overflow: hidden;
+    background-color: #000000;
 }
 
 .experience
@@ -41,4 +42,13 @@ body
 .ui .seedLabel {
     color: white;
     font-size: 20px;
+}
+
+.experience {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.experience.active {
+    opacity: 1;
 }

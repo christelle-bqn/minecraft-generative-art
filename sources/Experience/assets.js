@@ -11,6 +11,7 @@ export default [
             { name: 'textureSummer', source: '/assets/texture-summer.png', type: 'texture' },
             { name: 'bird', source: '/assets/models/bird.glb'},
             { name: 'text', source: '/assets/models/text.glb'},
+            { name: 'planet', source: '/assets/models/planet_earth.glb'},
         ]
     }
 ]

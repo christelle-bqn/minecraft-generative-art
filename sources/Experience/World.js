@@ -69,16 +69,6 @@ export default class World {
     curve.tension = 0.8
     const points = curve.getPoints(100)
 
-    /* for (let i=0; i < 1 ; i += 0.001) {
-      const position = curve.getPointAt(i);
-
-      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.002, 16, 16), new THREE.MeshBasicMaterial({color: '#ff0000'}))
-
-      mesh.position.copy(position)
-
-      this.scene.add(mesh)
-    } */
-
     this.bird.pathPosition = points.map((current, index) => {
       const next = points[index + 1] || current;
       return next;
@@ -167,7 +157,7 @@ export default class World {
     autumnButton.name = 'autumnButton';
     winterButton.name = 'winterButton';
 
-    this.map.position.set(0, -0.02);
+    this.map.position.set(0, -0.02, 0.5);
 
     this.sky.position.set(0, -0.014, 1.0);
 

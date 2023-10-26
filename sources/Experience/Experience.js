@@ -36,6 +36,7 @@ export default class Experience
         this.time = new Time()
         this.sizes = new Sizes()
         this.isExperienceStarted = false;
+        this.experienceContainer = document.querySelector(".experience");
         this.setConfig()
         this.setDebug()
         this.setStats()
@@ -65,6 +66,7 @@ export default class Experience
             if (!this.seed) {
                 this.seed = this.seedInput.value;
                 this.isExperienceStarted = true;
+                this.experienceContainer.classList.add("active");
                 this.time.elapsed = 0;
                 this.scene.add(this.world.map, this.world.sky);
                 console.log(this.seed + " is the seed");

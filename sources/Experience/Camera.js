@@ -47,7 +47,7 @@ export default class Camera {
     this.modes.debug.instance.rotation.reorder("YXZ");
     this.modes.debug.instance.position.set(0, 0, 3);
 
-    /*this.modes.debug.orbitControls = new OrbitControls(
+    this.modes.debug.orbitControls = new OrbitControls(
       this.modes.debug.instance,
       this.targetElement
     );
@@ -56,7 +56,7 @@ export default class Camera {
     this.modes.debug.orbitControls.enableKeys = false;
     this.modes.debug.orbitControls.zoomSpeed = 0.25;
     this.modes.debug.orbitControls.enableDamping = true;
-    this.modes.debug.orbitControls.update();*/
+    this.modes.debug.orbitControls.update();
   }
 
   resize() {
