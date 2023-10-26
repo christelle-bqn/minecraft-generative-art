@@ -35,6 +35,7 @@ export default class Experience
 
         this.time = new Time()
         this.sizes = new Sizes()
+        this.isExperienceStarted = false;
         this.setConfig()
         this.setDebug()
         this.setStats()
@@ -42,8 +43,10 @@ export default class Experience
         this.setCamera()
         this.setRenderer()
         this.setResources()
-        this.setWorld()
-        
+        this.setWorld();
+
+        this.initUI()
+
         this.sizes.on('resize', () =>
         {
             this.resize()
@@ -52,6 +55,22 @@ export default class Experience
         this.update()
     }
 
+    initUI()
+    {
+        this.startExperienceBtn = document.querySelector(".start");
+        this.seedInput = document.querySelector("#seedInput");
+        console.log('initUI');
+
+        this.startExperienceBtn.addEventListener("click", () => {
+            if (!this.seed) {
+                this.seed = this.seedInput.value;
+                this.isExperienceStarted = true;
+                this.time.elapsed = 0;
+                this.scene.add(this.world.map);
+                console.log(this.seed + " is the seed");
+            }
+        });
+    }
     setConfig()
     {
         this.config = {}

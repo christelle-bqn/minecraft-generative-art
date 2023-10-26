@@ -1,5 +1,6 @@
 import {ShaderMaterial, Vector2} from "three";
 import Experience from "../Experience";
+import gsap from "gsap";
 
 export default class MapMaterial extends ShaderMaterial {
   constructor(params) {
@@ -13,12 +14,12 @@ export default class MapMaterial extends ShaderMaterial {
   onBeforeCompile(shader, renderer) {
     super.onBeforeCompile(shader, renderer);
 
+    console.log("MapMaterial.onBeforeCompile()", shader, renderer);
+
+
     const snoise2 = glsl`#pragma glslify: snoise2 = require(glsl-noise/simplex/2d)`;
 
-    // Ask the user to provide a seed
-    // const seed = window.prompt("Please enter a seed par pitié (text or number)", this.generateRandomSeed().toString());
-    // const seed = this.generateRandomSeed();
-    const seed = 12;
+    const seed = this.experience.seed;
 
     console.log("Using seed: " + seed)
 
@@ -58,7 +59,7 @@ export default class MapMaterial extends ShaderMaterial {
       window.document.body.style.cursor = "default";
     });
 
-    this.zoomLevel = 800.0;
+    this.zoomLevel = 5.0;
     window.addEventListener("wheel", (event) => {
       const zoomFactor = 0.1;
       const previousZoomLevel = this.zoomLevel;
@@ -84,8 +85,7 @@ export default class MapMaterial extends ShaderMaterial {
       cameraPosition.set(focalPoint.x, focalPoint.y);
     });
 
-
-
+    shader.uniforms.isStarted = {value: false};
     shader.uniforms.cameraPos = {value: cameraPosition};
     shader.uniforms.mousePos = {value: mousePosition};
     shader.uniforms.seed = {value: this.seed};
@@ -121,10 +121,21 @@ export default class MapMaterial extends ShaderMaterial {
     return Math.floor(Math.random() * 1000);
   }
 
+  lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
   update(time) {
     if (this.uniforms) {
       this.uniforms.zoomLevel = { value: this.zoomLevel }
       this.uniforms.time = { value: time * 0.001 }
+    }
+
+    if (this.experience.isExperienceStarted && this.zoomLevel < 800) {
+      const targetZoomLevel = 800;
+      const zoomLevel = this.lerp(this.zoomLevel, targetZoomLevel, 0.01);
+      // Floor the zoom level to 2 decimal places
+      this.zoomLevel = Math.floor(zoomLevel * 100) / 100;
     }
   }
 }

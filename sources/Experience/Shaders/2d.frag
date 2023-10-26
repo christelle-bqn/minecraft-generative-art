@@ -10,6 +10,7 @@ uniform vec2 cameraPos;
 uniform float zoomLevel;
 uniform float time;
 uniform vec2 mousePos;
+uniform bool isStarted;
 
 #define PI 3.14159
 #define gridSize 2048.0
@@ -120,10 +121,14 @@ void main() {
         amplitude *= gain;
     }
 
-    elevation = floor(elevation * 5.0) / 5.0;
+//    elevation = floor(elevation * 5.0) / 5.0;
 
     // Remap elevation from [-1, 1] to [0, 1]
     elevation = (elevation + 1.0) * 0.5;
+
+    // Animate elevation
+    float elevationOffset = mix(-2.2, 0.0, clamp(time * .1, 0.0, 1.0));
+    elevation += elevationOffset;
 
     // Wider oceans
 //    elevation = pow(elevation, 2.);

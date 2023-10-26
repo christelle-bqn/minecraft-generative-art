@@ -17,3 +17,28 @@ body
     width: 100vw;
     height: 100vh;
 }
+
+.ui {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.ui .start {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+}
+
+.ui .seedLabel {
+    color: white;
+    font-size: 20px;
+}

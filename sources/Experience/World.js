@@ -12,6 +12,8 @@ export default class World {
     this.resources = this.experience.resources;
     this.camera = this.experience.camera;
 
+    console.log("World is ready !");
+
     this.resources.on("groupEnd", (_group) => {
       if (_group.name === "base") {
         this.setScene();
@@ -37,6 +39,7 @@ export default class World {
     const textureSummerImg = this.resources.items.textureSummer;
     textureSummerImg.anisotropy = 16;
     textureSummerImg.magFilter = THREE.NearestFilter;
+    console.log('set scene');
 
     // Map instanciation
     this.mapMaterial = new MapMaterial({
@@ -61,7 +64,7 @@ export default class World {
       }
     });
 
-    const map = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mapMaterial);
+    this.map = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mapMaterial);
 
     this.buttonMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 
@@ -75,14 +78,14 @@ export default class World {
     autumnButton.name = 'autumnButton';
     winterButton.name = 'winterButton';
 
-    map.position.set(0, -0.02);
+    this.map.position.set(0, -0.02);
 
     springButton.position.set(-0.45, 0.55);
     summerButton.position.set(-0.35, 0.55);
     autumnButton.position.set(-0.25, 0.55);
     winterButton.position.set(-0.15, 0.55);
 
-    this.scene.add(map, springButton, summerButton, autumnButton, winterButton);
+    // this.scene.add(map, springButton, summerButton, autumnButton, winterButton);
   }
 
   clickEvent() {
