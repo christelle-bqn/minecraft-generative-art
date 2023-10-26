@@ -9,7 +9,9 @@ export default [
             { name: 'textureWinter', source: '/assets/texture-winter.png', type: 'texture' },
             { name: 'textureSpring', source: '/assets/texture-spring.png', type: 'texture' },
             { name: 'textureSummer', source: '/assets/texture-summer.png', type: 'texture' },
-            { name: 'bird', source: '/assets/models/bird.glb'}
+            { name: 'bird', source: '/assets/models/bird.glb'},
+            { name: 'text', source: '/assets/models/text.glb'},
+            { name: 'planet', source: '/assets/models/planet_earth.glb'},
         ]
     }
 ]

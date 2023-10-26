@@ -49,15 +49,15 @@ export default class World {
   animateBird() {
     let pathPosition = [
       new THREE.Vector3(-0.7, -0.7, 0.5),
-      new THREE.Vector3(-0.2, -0.3, 0.5), 
-      new THREE.Vector3(1.0, 0.8, 0.5), 
-      new THREE.Vector3(1.0, -0.6, 0.5), 
+      new THREE.Vector3(-0.2, -0.3, 0.5),
+      new THREE.Vector3(1.0, 0.8, 0.5),
+      new THREE.Vector3(1.0, -0.6, 0.5),
       new THREE.Vector3(-0.8, 0.5, 0.5),
       new THREE.Vector3(-1.3, 0.8, 0.5),
-      new THREE.Vector3(-1.1, 0.9, 0.5),    
-      new THREE.Vector3(-0.4, 0.5, 0.5), 
-      new THREE.Vector3(1.0, -0.7, 0.5), 
-      new THREE.Vector3(0.9, 0.7, 0.5), 
+      new THREE.Vector3(-1.1, 0.9, 0.5),
+      new THREE.Vector3(-0.4, 0.5, 0.5),
+      new THREE.Vector3(1.0, -0.7, 0.5),
+      new THREE.Vector3(0.9, 0.7, 0.5),
       new THREE.Vector3(-0.7, -0.6, 0.5),
       new THREE.Vector3(-0.8, -0.6, 0.5),
 
@@ -68,16 +68,6 @@ export default class World {
     curve.closed = true
     curve.tension = 0.8
     const points = curve.getPoints(100)
-
-    /* for (let i=0; i < 1 ; i += 0.001) {
-      const position = curve.getPointAt(i);
-      
-      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.002, 16, 16), new THREE.MeshBasicMaterial({color: '#ff0000'}))
-
-      mesh.position.copy(position)
-      
-      this.scene.add(mesh)
-    } */
 
     this.bird.pathPosition = points.map((current, index) => {
       const next = points[index + 1] || current;
@@ -98,11 +88,22 @@ export default class World {
     spotLight.castShadow = true;
 
     const textureAutumnImg = this.resources.items.textureAutumn;
-    const textureWinterImg = this.resources.items.textureWinter;
-    const textureSpringImg = this.resources.items.textureSpring;
-    const textureSummerImg = this.resources.items.textureSummer;
+    textureAutumnImg.anisotropy = 16;
+    textureAutumnImg.magFilter = THREE.NearestFilter;
 
-    // Map instanciation  
+    const textureWinterImg = this.resources.items.textureWinter;
+    textureWinterImg.anisotropy = 16;
+    textureWinterImg.magFilter = THREE.NearestFilter;
+
+    const textureSpringImg = this.resources.items.textureSpring;
+    textureSpringImg.anisotropy = 16;
+    textureSpringImg.magFilter = THREE.NearestFilter;
+
+    const textureSummerImg = this.resources.items.textureSummer;
+    textureSummerImg.anisotropy = 16;
+    textureSummerImg.magFilter = THREE.NearestFilter;
+
+    // Map instanciation
     this.mapMaterial = new MapMaterial({
       fragmentShader,
       vertexShader,
@@ -121,7 +122,7 @@ export default class World {
         },
         textureSeason: {
           value: textureSpringImg,
-        }
+        },
       }
     });
 
@@ -134,12 +135,15 @@ export default class World {
         u_resolution: {
           value: new THREE.Vector2(window.innerWidth, window.innerHeight),
         },
+        zoomLevel: {
+            value: 5.0,
+        }
       }
     });
 
-    const map = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this.mapMaterial);
+    this.map = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.mapMaterial);
 
-    const sky = new THREE.Mesh(new THREE.PlaneGeometry(0.67, 0.669), this.skyMaterial);
+    this.sky = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.skyMaterial);
 
     this.buttonMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 
@@ -153,16 +157,14 @@ export default class World {
     autumnButton.name = 'autumnButton';
     winterButton.name = 'winterButton';
 
-    map.position.set(0, -0.02);
+    this.map.position.set(0, -0.02, 0.5);
 
-    sky.position.set(0, -0.014, 1.0);
+    this.sky.position.set(0, -0.014, 1.0);
 
     springButton.position.set(-0.45, 0.55);
     summerButton.position.set(-0.35, 0.55);
     autumnButton.position.set(-0.25, 0.55);
     winterButton.position.set(-0.15, 0.55);
-
-    this.scene.add(sky, map, springButton, summerButton, autumnButton, winterButton);
   }
 
   clickEvent() {
@@ -242,8 +244,9 @@ export default class World {
 
       this.bird.rotation.z = angle + Math.PI / 2
     }
+
   }
 
   destroy() {}
-  
+
 }

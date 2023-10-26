@@ -27,8 +27,8 @@ export default class MapMaterial extends ShaderMaterial {
     window.addEventListener("mousemove", (event) => {
       if (isDragging) {
         window.document.body.style.cursor = "grabbing";
-        let dx = -((event.clientX - startDragPosition.x) / window.innerWidth) * 1.4;
-        let dy = ((event.clientY - startDragPosition.y) / window.innerHeight) * 1.4;
+        let dx = -((event.clientX - startDragPosition.x) / window.innerWidth) * 0.8;
+        let dy = ((event.clientY - startDragPosition.y) / window.innerHeight) * 0.8;
 
         cameraPosition.x = lastCameraPosition.x + dx;
         cameraPosition.y = lastCameraPosition.y + dy;
@@ -45,7 +45,7 @@ export default class MapMaterial extends ShaderMaterial {
       window.document.body.style.cursor = "default";
     });
 
-    this.zoomLevel = 1.0;
+    this.zoomLevel = 500.0;
     window.addEventListener("wheel", (event) => {
       const zoomFactor = 0.1; // This value can be adjusted to change the zoom speed
       if (event.deltaY > 0) {
@@ -54,9 +54,12 @@ export default class MapMaterial extends ShaderMaterial {
         this.zoomLevel -= zoomFactor;
       }
       this.zoomLevel = Math.max(0.1, this.zoomLevel); // Ensure it doesn't go too small
+      console.log(this.zoomLevel)
     });
 
+    shader.uniforms.aspectRatio = {value: window.innerWidth / window.innerHeight};
     shader.uniforms.cameraPos = {value: cameraPosition};
+    shader.uniforms.zoomLevel = { value: this.zoomLevel }
 
     const snoise2 = glsl`#pragma glslify: snoise2 = require(glsl-noise/simplex/2d)`;
  
@@ -64,8 +67,6 @@ export default class MapMaterial extends ShaderMaterial {
       snoise2,
       'float fbm(in vec2 st) {',
     ].join('\n'));
-
-    console.log(shader.fragmentShader)
   }
 
   update(time) {

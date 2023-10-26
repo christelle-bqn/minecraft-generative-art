@@ -9,6 +9,7 @@ html,
 body
 {
     overflow: hidden;
+    background-color: #000000;
 }
 
 .experience
@@ -16,4 +17,38 @@ body
     position: fixed;
     width: 100vw;
     height: 100vh;
+}
+
+.ui {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.ui .start {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+}
+
+.ui .seedLabel {
+    color: white;
+    font-size: 20px;
+}
+
+.experience {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.experience.active {
+    opacity: 1;
 }
