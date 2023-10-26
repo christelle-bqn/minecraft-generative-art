@@ -20,12 +20,82 @@ export default class World {
       if (_group.name === "base") {
         this.setScene();
         this.clickEvent();
-        // this.setBirdModel();
+        this.animateBird();
       }
     });
   }
 
+  setBirdModel() {
+    this.mesh = this.resources.items.bird;
+    this.bird = this.mesh.scene;
+
+    this.mixer = new THREE.AnimationMixer(this.bird);
+
+    for (let i = 0; i < this.mesh.animations.length; i++) {
+      const animation = this.mesh.animations[i];
+      const action = this.mixer.clipAction(animation);
+      action.loop = THREE.LoopRepeat;
+      action.play();
+    }
+
+    this.bird.originPosition = {x: -0.4, y: -0.4};
+
+    this.bird.position.set(-0.8, -0.6, 0.5);
+    this.bird.scale.set(0.12, 0.12, 0.12);
+
+    this.scene.add(this.bird);
+  }
+
+  animateBird() {
+    let pathPosition = [
+      new THREE.Vector3(-0.7, -0.7, 0.5),
+      new THREE.Vector3(-0.2, -0.3, 0.5),
+      new THREE.Vector3(1.0, 0.8, 0.5),
+      new THREE.Vector3(1.0, -0.6, 0.5),
+      new THREE.Vector3(-0.8, 0.5, 0.5),
+      new THREE.Vector3(-1.3, 0.8, 0.5),
+      new THREE.Vector3(-1.1, 0.9, 0.5),
+      new THREE.Vector3(-0.4, 0.5, 0.5),
+      new THREE.Vector3(1.0, -0.7, 0.5),
+      new THREE.Vector3(0.9, 0.7, 0.5),
+      new THREE.Vector3(-0.7, -0.6, 0.5),
+      new THREE.Vector3(-0.8, -0.6, 0.5),
+
+    ]
+
+    const curve = new THREE.CatmullRomCurve3(pathPosition)
+
+    curve.closed = true
+    curve.tension = 0.8
+    const points = curve.getPoints(100)
+
+    /* for (let i=0; i < 1 ; i += 0.001) {
+      const position = curve.getPointAt(i);
+
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.002, 16, 16), new THREE.MeshBasicMaterial({color: '#ff0000'}))
+
+      mesh.position.copy(position)
+
+      this.scene.add(mesh)
+    } */
+
+    this.bird.pathPosition = points.map((current, index) => {
+      const next = points[index + 1] || current;
+      return next;
+    })
+
+    this.curve = curve;
+    this.birdSplineProgress = 0;
+  }
+
+
   setScene() {
+    this.setBirdModel();
+
+    const spotLight = new THREE.SpotLight(0xffffff, 5);
+    spotLight.position.set(0, 0, 2.7);
+    this.scene.add(spotLight);
+    spotLight.castShadow = true;
 
     const textureAutumnImg = this.resources.items.textureAutumn;
     textureAutumnImg.anisotropy = 16;
@@ -105,19 +175,6 @@ export default class World {
     summerButton.position.set(-0.35, 0.55);
     autumnButton.position.set(-0.25, 0.55);
     winterButton.position.set(-0.15, 0.55);
-
-    // this.text = this.resources.items.text.scene;
-    // this.text.position.set(0, 0, 0)
-    // this.text.scale.set(0.1, 0.1, 0.1);
-    // this.text.traverse((child) => {
-    //   if (child instanceof THREE.Mesh) {
-    //     child.material = new THREE.MeshBasicMaterial({color: 0xffffff});
-    //   }
-    // })
-    // console.log(this.text);
-    // this.scene.add(this.text);
-
-    // this.scene.add(map, springButton, summerButton, autumnButton, winterButton);
   }
 
   clickEvent() {
@@ -133,7 +190,6 @@ export default class World {
       // Normalize mouse position to -1 to +1 range
       mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
 
       // Update the picking ray with the camera and mouse position
       raycaster.setFromCamera(mouse, this.camera.instance);
@@ -165,27 +221,6 @@ export default class World {
     });
   }
 
-  setBirdModel() {
-    const bird = this.resources.items.bird;
-    const mesh = bird.scene;
-
-    this.mixer = new THREE.AnimationMixer(mesh);
-
-    for (let i = 0; i < bird.animations.length; i++) {
-      const animation = bird.animations[i];
-
-      const action = this.mixer.clipAction(animation);
-      action.play();
-    }
-
-    mesh.position.set(0, 0, 0.5);
-    mesh.scale.set(0.12, 0.12, 0.12);
-    mesh.rotation.x = Math.PI * 0.5;
-    mesh.rotation.y = Math.PI * 0.25;
-
-    this.scene.add(mesh);
-  }
-
   resize() {}
 
   update() {
@@ -197,14 +232,31 @@ export default class World {
       this.skyMaterial.update(this.experience.time.elapsed);
     }
 
-    if (this.setBirdModel) {
-      this.mixer.update(this.experience.time.delta * 0.0005);
+    if (this.mixer) {
+      this.mixer.update(this.experience.time.delta * 0.0008);
     }
 
-    if (this.text) {
-      this.text.rotation.y += 0.01;
+    if (this.bird) {
+      this.birdSplineProgress += 0.0013;
+
+      this.birdSplineProgress = this.birdSplineProgress % 1.0;
+
+      const position = this.curve.getPointAt(this.birdSplineProgress);
+
+      this.bird.position.copy(position)
+
+      this.targetPosition = this.curve.getPointAt((this.birdSplineProgress + 0.01) % 1.0);
+
+      //this.bird.lookAt(this.targetPosition)
+
+      const dir = new THREE.Vector3().copy(position).sub(this.targetPosition).normalize()
+      const angle = Math.atan2(dir.y, dir.x)
+
+      this.bird.rotation.z = angle + Math.PI / 2
     }
+
   }
 
   destroy() {}
+
 }
