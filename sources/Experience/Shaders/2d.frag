@@ -74,6 +74,8 @@ uniform bool isStarted;
 #define isSavanna when_gt(elevation, 0.2) * when_lt(elevation, 0.7) * when_gt(humidity, 0.4) * when_lt(humidity, 0.8) * when_gt(temperature, 0.6)
 #define isVolcano when_gt(elevation, 0.9) * when_lt(humidity, 0.4) * when_gt(temperature, 0.6)
 
+// 0 - 0.25 - 0.50 - 0.75 - 1.0
+
 float when_gt(float x, float y) {
     return max(sign(x - y), 0.0);
 }
