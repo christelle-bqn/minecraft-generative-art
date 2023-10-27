@@ -40,26 +40,26 @@ export default class World {
 
     this.bird.originPosition = {x: -0.4, y: -0.4};
 
-    this.bird.position.set(-0.8, -0.6, 0.5);
-    this.bird.scale.set(0.12, 0.12, 0.12);
+    this.bird.position.set(-0.8, -0.6, 1.5);
+    this.bird.scale.set(0.08, 0.08, 0.08);
 
     this.scene.add(this.bird);
   }
 
   animateBird() {
     let pathPosition = [
-      new THREE.Vector3(-0.7, -0.7, 0.5),
-      new THREE.Vector3(-0.2, -0.3, 0.5),
-      new THREE.Vector3(1.0, 0.8, 0.5),
-      new THREE.Vector3(1.0, -0.6, 0.5),
-      new THREE.Vector3(-0.8, 0.5, 0.5),
-      new THREE.Vector3(-1.3, 0.8, 0.5),
-      new THREE.Vector3(-1.1, 0.9, 0.5),
-      new THREE.Vector3(-0.4, 0.5, 0.5),
-      new THREE.Vector3(1.0, -0.7, 0.5),
-      new THREE.Vector3(0.9, 0.7, 0.5),
-      new THREE.Vector3(-0.7, -0.6, 0.5),
-      new THREE.Vector3(-0.8, -0.6, 0.5),
+      new THREE.Vector3(-0.7, -0.7, 1.5),
+      new THREE.Vector3(-0.2, -0.3, 1.5),
+      new THREE.Vector3(1.0, 0.8, 1.5),
+      new THREE.Vector3(1.0, -0.6, 1.5),
+      new THREE.Vector3(-0.8, 0.5, 1.5),
+      new THREE.Vector3(-1.3, 0.8, 1.5),
+      new THREE.Vector3(-1.1, 0.9, 1.5),
+      new THREE.Vector3(-0.4, 0.5, 1.5),
+      new THREE.Vector3(1.0, -0.7, 1.5),
+      new THREE.Vector3(0.9, 0.7, 1.5),
+      new THREE.Vector3(-0.7, -0.6, 1.5),
+      new THREE.Vector3(-0.8, -0.6, 1.5),
 
     ]
 
@@ -227,7 +227,7 @@ export default class World {
     }
 
     if (this.bird) {
-      this.birdSplineProgress += 0.0013;
+      this.birdSplineProgress += 0.00040;
 
       this.birdSplineProgress = this.birdSplineProgress % 1.0;
 
