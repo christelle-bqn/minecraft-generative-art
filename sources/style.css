@@ -1,8 +1,20 @@
+@font-face {
+    font-family: 'PP NeueBit';
+    src: url('/assets/fonts/PPNeueBit-Bold.otf');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
 *
 {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+h1, h2, p, span, input, button, label {
+    font-family: 'PP NeueBit', sans-serif;
 }
 
 html,
@@ -17,33 +29,116 @@ body
     position: fixed;
     width: 100vw;
     height: 100vh;
+    top: 0;
+    left: 0;
 }
 
 .ui {
     position: absolute;
     top: 50%;
-    left: 20px;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    gap: 64px;
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
+    animation: fadeIn 0.5s ease-in-out forwards 1000ms;
 }
 
+.ui.disabled {
+    animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+.ui .formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    width: 340px;
+}
 .ui .start {
     background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
+    border-top: 2px solid #000;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-left: 2px solid #000;
+    background: #5A6D7F;
+    box-shadow: -4px -4px 0px 0px #2C3654 inset, 4px 4px 0px 0px rgba(0, 0, 0, 0.25);
+    color: #FCF6D8;
+    font-size: 56px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding: 16px 32px;
+    white-space: nowrap;
+    transition: all 0.2s ease-in-out;
+}
+
+.ui .start:hover {
+    cursor: pointer;
+    border-top: 2px solid #F4F7E5;
+    border-left: 2px solid #F4F7E5;
+    background: #4CA590;
+    box-shadow: -4px -4px 0px 0px #2C3654 inset, 4px 4px 0px 0px rgba(0, 0, 0, 0.25), -2px -2px 0px 0px #000;
 }
 
 .ui .seedLabel {
     color: white;
     font-size: 20px;
+    display: none;
 }
 
+.ui #seedInput {
+    border-top: 2px solid #000;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-left: 2px solid #000;
+    background: #293036;
+    box-shadow: -4px -4px 0px 0px #001120 inset, 4px 4px 0px 0px rgba(41, 48, 54, 0.25);
+    padding: 10px 8px;
+    color: #FCF6D8;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    width: 100%;
+}
+
+#seedInput:focus {
+    outline: none;
+}
+
+#seedInput::placeholder {
+    color: #FCF6D8;
+    opacity: 0.5;
+}
+
+.ui .seedInputContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+
+
+.ui .title {
+    width: 900px;
+    height: 200px;
+    background-image: url('/assets/title.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 16px;
+}
 .experience {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
@@ -51,4 +146,54 @@ body
 
 .experience.active {
     opacity: 1;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    opacity: 0;
+}
+
+.background.intro {
+    background: linear-gradient(0deg, #D9FEE3 27.08%, #00A7C7 100%);
+    opacity: 1;
+    background-position-y: 100%;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.background.main {
+    background-image: url('/assets/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    background-position-y: 100%;
+    transition: opacity 0.5s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out forwards 1500ms; /* 500ms delay */
+}
+
+
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+        pointer-events: all;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        pointer-events: none;
+    }
 }

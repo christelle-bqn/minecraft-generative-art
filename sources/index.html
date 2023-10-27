@@ -3,16 +3,23 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Three.js - Template - Complex</title>
+        <title>Crée ton monde !!!!</title>
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
         <div class="ui">
-            <label class="seedLabel" for="seed">Seed</label>
-            <input type="text" name="seed" id="seedInput">
-            <button class="start">Start</button>
+            <div class="title"></div>
+            <div class="formContainer">
+                <div class="seedInputContainer">
+                    <label class="seedLabel" for="seedInput">Seed</label>
+                    <input type="text" name="seed" id="seedInput" placeholder="Entrer une seed...">
+                </div>
+                <button class="start" type="submit">Créer un monde</button>
+            </div>
         </div>
         <div class="experience"></div>
         <script type="module" src="./index.js"></script>
+        <div class="background intro"></div>
+        <div class="background main"></div>
     </body>
 </html>
