@@ -157,7 +157,7 @@ export default class World {
     autumnButton.name = 'autumnButton';
     winterButton.name = 'winterButton';
 
-    this.map.position.set(0, -0.02, 0.5);
+    this.map.position.set(0, -0.02, 0.8);
 
     this.sky.position.set(0, -0.014, 1.0);
 
