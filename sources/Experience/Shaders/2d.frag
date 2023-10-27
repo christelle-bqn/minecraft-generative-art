@@ -13,53 +13,53 @@ uniform vec2 mousePos;
 uniform bool isStarted;
 
 #define PI 3.14159
-#define gridSize pow(2.0, 13.0)
+#define gridSize pow(2.0, 11.0)
 
 // Blocs colors
-#define grass0 vec2(0.5, 8.5)
-#define grass1 vec2(1.5, 8.5)
-#define grass2 vec2(2.5, 8.5)
-#define grass3 vec2(3.5, 8.5)
+#define grass0 vec2(2.0, 8.5)
+#define grass1 vec2(4.0, 8.5)
+#define grass2 vec2(5.5, 8.5)
+#define grass3 vec2(7., 8.5)
 
 #define sand0 vec2(0, 7)
-#define sand1 vec2(1.5, 7.5)
-#define sand2 vec2(2.5, 7.5)
-#define sand3 vec2(3.5, 7.5)
+#define sand1 vec2(7, 7.5)
+#define sand2 vec2(8, 7.5)
+#define sand3 vec2(9., 7.5)
 
-#define water0 vec2(0.5, 6.5)
-#define water1 vec2(1.5, 6.5)
-#define water2 vec2(2.5, 6.5)
-#define water3 vec2(3.5, 6.5)
+#define water0 vec2(0.0, 6.5)
+#define water1 vec2(0.6, 6.5)
+#define water2 vec2(1.2, 6.5)
+#define water3 vec2(2.0, 6.5)
 
-#define stone0 vec2(0.5, 5.5)
-#define stone1 vec2(1.5, 5.5)
-#define stone2 vec2(2.5, 5.5)
-#define stone3 vec2(3.5, 5.5)
+#define stone0 vec2(7.0, 5.5)
+#define stone1 vec2(8.0, 5.5)
+#define stone2 vec2(8.5, 5.5)
+#define stone3 vec2(9., 5.5)
 
-#define stoneTundra0 vec2(0.5, 4.5)
-#define stoneTundra1 vec2(1.5, 4.5)
-#define stoneTundra2 vec2(2.5, 4.5)
-#define stoneTundra3 vec2(3.5, 4.5)
+#define stoneTundra0 vec2(7.0, 4.5)
+#define stoneTundra1 vec2(8.0, 4.5)
+#define stoneTundra2 vec2(8.5, 4.5)
+#define stoneTundra3 vec2(9., 4.5)
 
-#define snow0 vec2(0.5, 3.5)
-#define snow1 vec2(1.5, 3.5)
-#define snow2 vec2(2.5, 3.5)
-#define snow3 vec2(3.5, 3.5)
+#define snow0 vec2(2.0, 3.5)
+#define snow1 vec2(4.0, 3.5)
+#define snow2 vec2(6.0, 3.5)
+#define snow3 vec2(9.0, 3.5)
 
-#define jungle0 vec2(0.5, 2.5)
-#define jungle1 vec2(1.5, 2.5)
-#define jungle2 vec2(2.5, 2.5)
-#define jungle3 vec2(3.5, 2.5)
+#define jungle0 vec2(2.5, 2.5)
+#define jungle1 vec2(4., 2.5)
+#define jungle2 vec2(5.5, 2.5)
+#define jungle3 vec2(7., 2.5)
 
-#define savanna0 vec2(0.5, 1.5)
-#define savanna1 vec2(1.5, 1.5)
-#define savanna2 vec2(2.5, 1.5)
-#define savanna3 vec2(3.5, 1.5)
+#define savanna0 vec2(2.5, 1.5)
+#define savanna1 vec2(4., 1.5)
+#define savanna2 vec2(5.5, 1.5)
+#define savanna3 vec2(7., 1.5)
 
-#define volcano0 vec2(0.5, 0.5)
-#define volcano1 vec2(1.5, 0.5)
-#define volcano2 vec2(2.5, 0.5)
-#define volcano3 vec2(3.5, 0.5)
+#define volcano0 vec2(8., 0.5)
+#define volcano1 vec2(8.5, 0.5)
+#define volcano2 vec2(8.8, 0.5)
+#define volcano3 vec2(9., 0.5)
 
 // Biomes
 #define isOcean when_lt(elevation, 0.2)
@@ -189,22 +189,25 @@ void main() {
     /* BIOMES */
 
     // Plains
-    colorPosition = mix(colorPosition, grass0, isPlains);
-    colorPosition = mix(colorPosition, grass1, elevation * isPlains);
-    colorPosition = mix(colorPosition, grass2, elevation * isPlains);
+    colorPosition = mix(colorPosition, grass3, isPlains);
     colorPosition = mix(colorPosition, grass3, elevation * isPlains);
+    colorPosition = mix(colorPosition, grass2, elevation * isPlains);
+    colorPosition = mix(colorPosition, grass1, elevation * isPlains);
+    colorPosition = mix(colorPosition, grass0, elevation * isPlains);
 
     // Mountains
-    colorPosition = mix(colorPosition, stone0, isStonned);
-    colorPosition = mix(colorPosition, stone1, elevation * isStonned);
-    colorPosition = mix(colorPosition, stone2, elevation * isStonned);
+    colorPosition = mix(colorPosition, stone3, isStonned);
     colorPosition = mix(colorPosition, stone3, elevation * isStonned);
+    colorPosition = mix(colorPosition, stone2, elevation * isStonned);
+    colorPosition = mix(colorPosition, stone1, elevation * isStonned);
+    colorPosition = mix(colorPosition, stone0, elevation * isStonned);
 
     // Tundra
-    colorPosition = mix(colorPosition, stoneTundra0, isTundra);
-    colorPosition = mix(colorPosition, stoneTundra1, elevation * isTundra);
-    colorPosition = mix(colorPosition, stoneTundra2, elevation * isTundra);
+    colorPosition = mix(colorPosition, stoneTundra3, isTundra);
     colorPosition = mix(colorPosition, stoneTundra3, elevation * isTundra);
+    colorPosition = mix(colorPosition, stoneTundra2, elevation * isTundra);
+    colorPosition = mix(colorPosition, stoneTundra1, elevation * isTundra);
+    colorPosition = mix(colorPosition, stoneTundra0, elevation *isTundra);
 
     // Beach
     colorPosition = mix(colorPosition, sand0, isBeach);
@@ -213,27 +216,32 @@ void main() {
     colorPosition = mix(colorPosition, sand3, elevation * isBeach);
 
     // Desert
-    colorPosition = mix(colorPosition, sand1, elevation * isDesert);
-    colorPosition = mix(colorPosition, sand2, elevation * isDesert);
+    colorPosition = mix(colorPosition, sand3, isDesert);
     colorPosition = mix(colorPosition, sand3, elevation * isDesert);
+    colorPosition = mix(colorPosition, sand2, elevation * isDesert);
+    colorPosition = mix(colorPosition, sand1, elevation * isDesert);
+    colorPosition = mix(colorPosition, sand0, elevation * isDesert);
 
     // Jungle
-    colorPosition = mix(colorPosition, jungle0, isJungle);
-    colorPosition = mix(colorPosition, jungle1, elevation * isJungle);
-    colorPosition = mix(colorPosition, jungle2, elevation * isJungle);
+    colorPosition = mix(colorPosition, jungle3, isJungle);
     colorPosition = mix(colorPosition, jungle3, elevation * isJungle);
+    colorPosition = mix(colorPosition, jungle2, elevation * isJungle);
+    colorPosition = mix(colorPosition, jungle1, elevation * isJungle);
+    colorPosition = mix(colorPosition, jungle0, elevation * isJungle);
 
     // Savanna
-    colorPosition = mix(colorPosition, savanna0, isSavanna);
-    colorPosition = mix(colorPosition, savanna1, elevation * isSavanna);
-    colorPosition = mix(colorPosition, savanna2, elevation * isSavanna);
+    colorPosition = mix(colorPosition, savanna3, isSavanna);
     colorPosition = mix(colorPosition, savanna3, elevation * isSavanna);
+    colorPosition = mix(colorPosition, savanna2, elevation * isSavanna);
+    colorPosition = mix(colorPosition, savanna1, elevation * isSavanna);
+    colorPosition = mix(colorPosition, savanna0, elevation * isSavanna);
 
     // Volcano
-    colorPosition = mix(colorPosition, volcano0, isVolcano);
-    colorPosition = mix(colorPosition, volcano1, elevation * isVolcano);
-    colorPosition = mix(colorPosition, volcano2, elevation * isVolcano);
+    colorPosition = mix(colorPosition, volcano3, isVolcano);
     colorPosition = mix(colorPosition, volcano3, elevation * isVolcano);
+    colorPosition = mix(colorPosition, volcano2, elevation * isVolcano);
+    colorPosition = mix(colorPosition, volcano1, elevation * isVolcano);
+    colorPosition = mix(colorPosition, volcano0, elevation * isVolcano);
 
     // Snow Mountains
     colorPosition = mix(colorPosition, snow3, isSnow);
