@@ -1,6 +1,5 @@
 import {ShaderMaterial, Vector2} from "three";
 import Experience from "../Experience";
-import gsap from "gsap";
 
 export default class MapMaterial extends ShaderMaterial {
   constructor(params) {
